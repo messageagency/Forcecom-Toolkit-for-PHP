@@ -30,6 +30,7 @@ define ("EMAIL_PRIORITY_NORMAL", 'Normal');
 define ("EMAIL_PRIORITY_LOW", 'Low');
 define ("EMAIL_PRIORITY_LOWEST", 'Lowest');
 
+#[\AllowDynamicProperties]
 class Email {
   public function setBccSender($bccSender) {
     $this->bccSender = $bccSender;
@@ -60,6 +61,7 @@ class Email {
   }
 }
 
+#[\AllowDynamicProperties]
 class SingleEmailMessage extends Email {
   public function __construct() {}
 
@@ -114,6 +116,7 @@ class SingleEmailMessage extends Email {
   }
 }
 
+#[\AllowDynamicProperties]
 class MassEmailMessage extends Email {
   public function setTemplateId($templateId) {
     $this->templateId = $templateId;

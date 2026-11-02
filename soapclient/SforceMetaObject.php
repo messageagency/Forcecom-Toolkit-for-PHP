@@ -26,6 +26,7 @@
  */
 require_once('SforceFieldTypes.php');
 
+#[\AllowDynamicProperties]
 class SforceCustomObject {
   public function setDeploymentStatus($deploymentStatus) {
     $this->deploymentStatus = $deploymentStatus;
@@ -88,6 +89,7 @@ class SforceCustomObject {
   }
 }
 
+#[\AllowDynamicProperties]
 class SforceCustomField {
   public function setCaseSensitive($caseSensitive) {
     $this->caseSensitive = $caseSensitive;

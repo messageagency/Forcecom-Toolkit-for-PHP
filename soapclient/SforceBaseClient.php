@@ -679,7 +679,7 @@ class SforceBaseClient {
 	 * @param string Type   Object Type
 	 * @return DescribeLayoutResult
 	 */
-	public function describeLayout($type, array $recordTypeIds=null) {
+	public function describeLayout($type, ?array $recordTypeIds=null) {
 		$this->setHeaders("describeLayout");
 		$arg = new stdClass();
 		$arg->sObjectType = new SoapVar($type, XSD_STRING, 'string', 'http://www.w3.org/2001/XMLSchema');
@@ -969,7 +969,7 @@ class QueryResult implements Iterator{
 						array_push($this->records, $record);
 					};
 				} else {
-					array_push($this->records, $record);
+					array_push($this->records, $response->records);
 				}
 			}
 		}
@@ -978,12 +978,14 @@ class QueryResult implements Iterator{
 	public function setSf(SforceBaseClient $sf) { $this->sf = $sf; } // Dependency Injection
 	
 	// Basic Iterator implementation functions
-	public function rewind() { $this->pointer = 0; }
-	public function next() { ++$this->pointer; }
+	public function rewind(): void { $this->pointer = 0; }
+	public function next(): void { ++$this->pointer; }
+	#[\ReturnTypeWillChange]
 	public function key() { return $this->pointer; }
+	#[\ReturnTypeWillChange]
 	public function current() { return new SObject($this->records[$this->pointer]); }
 	
-	public function valid() {
+	public function valid(): bool {
 		while ($this->pointer >= count($this->records)) {
 			// Pointer is larger than (current) result set; see if we can fetch more
 			if ($this->done === false) {
@@ -1002,6 +1004,7 @@ class QueryResult implements Iterator{
 	}
 }
 
+#[\AllowDynamicProperties]
 class SObject {
 	public $type;
 	public $fields;
