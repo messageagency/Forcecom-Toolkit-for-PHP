@@ -43,8 +43,14 @@ require_once ('SforceBaseClient.php');
  // xsi:type forces PHP SOAP to just leave the tags intact
  class SforceSoapClient extends SoapClient {
    #[\ReturnTypeWillChange]
-   function __doRequest($request, $location, $action, $version, $one_way=0) {
-     $response = parent::__doRequest($request, $location, $action, $version, $one_way);
+   function __doRequest($request, $location, $action, $version, $one_way=0, $uriParserClass=null) {
+     // PHP 8.5 added the $uriParserClass parameter; earlier versions reject a
+     // sixth argument, so only forward it where the parent accepts it.
+     $args = [$request, $location, $action, $version, $one_way];
+     if (PHP_VERSION_ID >= 80500) {
+       $args[] = $uriParserClass;
+     }
+     $response = parent::__doRequest(...$args);
 
      // Quick check to only parse the XML here if we think we need to
      if ($response === null || $response === '' || $response === false) {

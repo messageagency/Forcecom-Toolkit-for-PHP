@@ -1177,7 +1177,11 @@ class SObject {
 		xml_parser_set_option( $parser, XML_OPTION_CASE_FOLDING, 0 );
 		xml_parser_set_option( $parser, XML_OPTION_SKIP_WHITE, 1 );
 		xml_parse_into_struct( $parser, $contents, $xml_values );
-		xml_parser_free( $parser );
+		// xml_parser_free() is a no-op since PHP 8.0 and deprecated in 8.5.
+		if (PHP_VERSION_ID < 80000) {
+			xml_parser_free( $parser );
+		}
+		unset($parser);
 
 		if(!$xml_values) return;//Hmm...
 
